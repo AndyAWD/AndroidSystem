@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ResultOneActivity">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/amMbResultOne"
+        android:id="@+id/aroMbMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:text="跳轉 ResultOneActivity"
+        android:text="跳轉 MainActivity"
         android:textAllCaps="false"
         app:layout_constraintDimensionRatio="5:1"
         app:layout_constraintEnd_toEndOf="parent"
