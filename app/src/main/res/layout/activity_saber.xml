@@ -4,32 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".SaberActivity">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/amMbSaber"
+        android:id="@+id/asMbMain"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:text="跳轉 SaberActivity"
+        android:text="跳轉 Main 回傳 Excalibur"
         android:textAllCaps="false"
         app:layout_constraintDimensionRatio="5:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/amMbArcher"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="跳轉 ArcherActivity"
-        android:textAllCaps="false"
-        app:layout_constraintDimensionRatio="5:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amMbSaber" />
 </androidx.constraintlayout.widget.ConstraintLayout>

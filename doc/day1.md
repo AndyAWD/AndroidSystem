@@ -1,8 +1,8 @@
-# 1 - 什麼！startActivityForResult被標記棄用？
+# 1 - 什麼！startActivityForResult 被標記棄用？
 
 ***
 
-講到硬體就會用到權限控制，然後一定會用到onActivityResult和startActivityForResult  
+講到硬體就會用到權限控制，然後一定會用到 onActivityResult 和 startActivityForResult  
 結果上面這兩個在最新的版本已經被標記棄用
 
 讓我們看看原始碼
@@ -43,15 +43,15 @@ public void startActivityForResult(@SuppressLint("UnknownNullness") Intent inten
         }
 ````
 
-現在Google建議使用[Activity Results API](https://developer.android.com/training/basics/intents/result)  
+現在 Google
+建議使用 [Activity Results API](https://developer.android.com/training/basics/intents/result)  
 所以現在來實作怎麼使用
 
-首先是兩個Activity帶值互相跳頁的寫法  
-建立MainActivity和ResultOneActivity兩個Activity    
-MainActivity會帶一個Key值為system的android字串到ResultOneActivity    
-ResultOneActivity結束時會帶一個Key值為result的one字串到MainActivity
+首先是 Activity 帶值互相跳頁的寫法  
+建立 MainActivity、SaberActivity、ArcherActivity  
+MainActivity 跳到 SaberActivity 和 ArcherActivity 時會帶姓名 SaberActivity 和 ArcherActivity 離開頁面後會回傳武器
 
-MainActivity畫面如下
+MainActivity 畫面如下
 
 ````xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -61,15 +61,24 @@ MainActivity畫面如下
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context=".MainActivity">
 
-    <com.google.android.material.button.MaterialButton android:id="@+id/amMbResultOne"
+    <com.google.android.material.button.MaterialButton android:id="@+id/amMbSaber"
         android:layout_width="match_parent" android:layout_height="0dp"
-        android:text="跳轉 ResultOneActivity" android:textAllCaps="false"
+        android:layout_marginStart="8dp" android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp" android:text="跳轉 SaberActivity" android:textAllCaps="false"
         app:layout_constraintDimensionRatio="5:1" app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/amMbArcher"
+        android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
+        android:text="跳轉 ArcherActivity" android:textAllCaps="false"
+        app:layout_constraintDimensionRatio="5:1" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbSaber" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 ````
 
-ResultOneActivity畫面如下
+SaberActivity 畫面如下
 
 ````xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -77,44 +86,74 @@ ResultOneActivity畫面如下
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context=".ResultOneActivity">
+    android:layout_height="match_parent" tools:context=".SaberActivity">
 
-    <com.google.android.material.button.MaterialButton android:id="@+id/aroMbMain"
+    <com.google.android.material.button.MaterialButton android:id="@+id/asMbMain"
         android:layout_width="match_parent" android:layout_height="0dp"
-        android:text="跳轉 MainActivity" android:textAllCaps="false"
-        app:layout_constraintDimensionRatio="5:1" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="8dp" android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp" android:text="跳轉 Main 回傳 Excalibur"
+        android:textAllCaps="false" app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 ````
 
-MainActivity程式碼的部份，以前是建立onActivityResult，現在不用  
-改成建立合約(Contract)和啟動器(Launcher)
+ArcherActivity 畫面如下
 
-所以我們先在MainActivity建立啟動器，裡面的監聽跟以前onActivityResult的寫法一樣
+````xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context=".ArcherActivity">
+
+    <com.google.android.material.button.MaterialButton android:id="@+id/aaMbMain"
+        android:layout_width="match_parent" android:layout_height="0dp"
+        android:layout_marginStart="8dp" android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp" android:text="跳轉 Main 回傳 Unlimited Blade Works"
+        android:textAllCaps="false" app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+````
+
+MainActivity 程式碼的部份，以前是建立 onActivityResult 監聽資料  
+現在改成建立合約(Contract)和啟動器(Launcher)
+
+所以我們先在 MainActivity 建立啟動器，裡面的監聽跟以前 onActivityResult 的寫法一樣
 
 ````kotlin
-private val resultOneLauncher =
+private val resultLauncher =
     registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
         if (RESULT_OK == activityResult.resultCode) {
             Log.d(
                 "maho",
-                "ResultOneActivity帶過來的值: ${activityResult.data?.getStringExtra("result")}"
+                "回傳: ${activityResult.data?.getStringExtra(BaseConstants.WEAPON)}"
             )
         }
     }
 ````
 
-至於跳頁，以前我們使用startActivity(intent)，因為建立啟動器的關係，所以改用啟動器執行
+至於跳頁，以前我們使用 startActivity(intent)，因為建立啟動器的關係，所以改用啟動器執行
 
 ````kotlin
-val intent = Intent(this, ResultOneActivity::class.java).apply {
-    this.putExtra("system", "android")
+//跳轉到SaberActivity
+val intent = Intent(this, SaberActivity::class.java).apply {
+    this.putExtra(BaseConstants.NAME, "Arthur")
 }
 
-resultOneLauncher.launch(intent)
+resultLauncher.launch(intent)
+
+//跳轉到ArcherActivity
+val intent = Intent(this, ArcherActivity::class.java).apply {
+    this.putExtra(BaseConstants.NAME, "Emiya")
+}
+
+resultLauncher.launch(intent)
 ````
 
-MainActivity全部的程式碼是這樣
+MainActivity 全部的程式碼是這樣
 
 ````kotlin
 class MainActivity : AppCompatActivity() {
@@ -126,47 +165,79 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initClickListener() {
-        amMbResultOne.setOnClickListener {
-
-            val intent = Intent(this, ResultOneActivity::class.java).apply {
-                this.putExtra("system", "android")
+        amMbSaber.setOnClickListener {
+            val intent = Intent(this, SaberActivity::class.java).apply {
+                this.putExtra(BaseConstants.NAME, "Arthur")
             }
 
-            resultOneLauncher.launch(intent)
+            resultLauncher.launch(intent)
+        }
+
+        amMbArcher.setOnClickListener {
+            val intent = Intent(this, ArcherActivity::class.java).apply {
+                this.putExtra(BaseConstants.NAME, "Emiya")
+            }
+
+            resultLauncher.launch(intent)
         }
     }
 
-    private val resultOneLauncher =
+    private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (RESULT_OK == activityResult.resultCode) {
                 Log.d(
                     "maho",
-                    "ResultOneActivity帶過來的值: ${activityResult.data?.getStringExtra("result")}"
+                    "回傳: ${activityResult.data?.getStringExtra(BaseConstants.WEAPON)}"
                 )
             }
         }
 }
 ````
 
-ResultOneActivity程式碼的部份，寫法就和以前一樣
+跳轉後的程式碼，寫法和以前一樣
 
 ````kotlin
-class ResultOneActivity : AppCompatActivity() {
+class SaberActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result_one)
+        setContentView(R.layout.activity_saber)
 
-        val system = intent.getStringExtra("system")
-        Log.d("maho", "MainActivity帶過來的值: $system")
+        val name = intent.getStringExtra(BaseConstants.NAME)
+        Log.d("maho", "姓名: $name")
 
         initClickListener()
     }
 
     private fun initClickListener() {
-        aroMbMain.setOnClickListener {
+        asMbMain.setOnClickListener {
 
             val intent = Intent().apply {
-                this.putExtra("result", "one")
+                this.putExtra(BaseConstants.WEAPON, "Excalibur")
+            }
+
+            setResult(RESULT_OK, intent)
+            finish()
+        }
+    }
+}
+
+
+class ArcherActivity : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_archer)
+
+        val name = intent.getStringExtra(BaseConstants.NAME)
+        Log.d("maho", "姓名: $name")
+
+        initClickListener()
+    }
+
+    private fun initClickListener() {
+        aaMbMain.setOnClickListener {
+
+            val intent = Intent().apply {
+                this.putExtra(BaseConstants.WEAPON, "Unlimited Blade Works")
             }
 
             setResult(RESULT_OK, intent)
@@ -179,8 +250,10 @@ class ResultOneActivity : AppCompatActivity() {
 實際執行程式後的Log
 
 ````
-tw.com.andyawd.androidsystem D/maho: MainActivity帶過來的值: android
-tw.com.andyawd.androidsystem D/maho: ResultOneActivity帶過來的值: one
+tw.com.andyawd.androidsystem D/maho: 姓名: Arthur
+tw.com.andyawd.androidsystem D/maho: 回傳: Excalibur
+tw.com.andyawd.androidsystem D/maho: 姓名: Emiya
+tw.com.andyawd.androidsystem D/maho: 回傳: Unlimited Blade Works
 ````
 
 所以我們已經跨出第一步，不使用onActivityResult監聽Result  

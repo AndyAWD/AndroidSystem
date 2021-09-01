@@ -10,7 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSystem">
         <activity
-            android:name=".ResultOneActivity"
+            android:name=".ArcherActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SaberActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

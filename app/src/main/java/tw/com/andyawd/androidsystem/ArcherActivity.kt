@@ -4,24 +4,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_result_one.*
+import kotlinx.android.synthetic.main.activity_archer.*
 
-class ResultOneActivity : AppCompatActivity() {
+class ArcherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_result_one)
+        setContentView(R.layout.activity_archer)
 
-        val system = intent.getStringExtra("system")
-        Log.d("maho", "MainActivity帶過來的值: $system")
+        val name = intent.getStringExtra(BaseConstants.NAME)
+        Log.d("maho", "姓名: $name")
 
         initClickListener()
     }
 
     private fun initClickListener() {
-        aroMbMain.setOnClickListener {
+        aaMbMain.setOnClickListener {
 
             val intent = Intent().apply {
-                this.putExtra("result", "one")
+                this.putExtra(BaseConstants.WEAPON, "Unlimited Blade Works")
             }
 
             setResult(RESULT_OK, intent)

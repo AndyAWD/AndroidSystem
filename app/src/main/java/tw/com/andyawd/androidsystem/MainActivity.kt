@@ -16,22 +16,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initClickListener() {
-        amMbResultOne.setOnClickListener {
-
-            val intent = Intent(this, ResultOneActivity::class.java).apply {
-                this.putExtra("system", "android")
+        amMbSaber.setOnClickListener {
+            val intent = Intent(this, SaberActivity::class.java).apply {
+                this.putExtra(BaseConstants.NAME, "Arthur")
             }
 
-            resultOneLauncher.launch(intent)
+            resultLauncher.launch(intent)
+        }
+
+        amMbArcher.setOnClickListener {
+            val intent = Intent(this, ArcherActivity::class.java).apply {
+                this.putExtra(BaseConstants.NAME, "Emiya")
+            }
+
+            resultLauncher.launch(intent)
         }
     }
 
-    private val resultOneLauncher =
+    private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             if (RESULT_OK == activityResult.resultCode) {
                 Log.d(
                     "maho",
-                    "ResultOneActivity帶過來的值: ${activityResult.data?.getStringExtra("result")}"
+                    "回傳: ${activityResult.data?.getStringExtra(BaseConstants.WEAPON)}"
                 )
             }
         }
