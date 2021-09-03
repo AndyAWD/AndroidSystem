@@ -31,6 +31,10 @@ class MainActivity : AppCompatActivity() {
 
             resultLauncher.launch(intent)
         }
+
+        amMbCreateDocument.setOnClickListener {
+            createDocumentResultLauncher.launch("saberEat.jpg")
+        }
     }
 
     private val resultLauncher =
@@ -41,6 +45,11 @@ class MainActivity : AppCompatActivity() {
                     "回傳: ${activityResult.data?.getStringExtra(BaseConstants.WEAPON)}"
                 )
             }
+        }
+
+    private val createDocumentResultLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+            Log.d("maho", "回傳: $uri")
         }
 }
 
