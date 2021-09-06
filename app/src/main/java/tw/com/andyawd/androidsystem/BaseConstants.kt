@@ -5,5 +5,6 @@ class BaseConstants {
         const val ANDROID_SYSTEM = "android_system"
         const val WEAPON = "weapon"
         const val NAME = "name"
+        const val DOT_FILEPROVIDER = ".fileprovider"
     }
 }
