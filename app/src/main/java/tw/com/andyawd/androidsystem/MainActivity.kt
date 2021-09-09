@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         amMbOpenDocument.setOnClickListener {
-            openDocumentResultLauncher.launch(arrayOf("image/jpeg", "image/png"))
+            openDocumentResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
         }
 
         amMbOpenDocumentTree.setOnClickListener {
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         amMbOpenMultipleDocuments.setOnClickListener {
-            openMultipleDocumentsResultLauncher.launch(arrayOf("image/jpeg", "image/png"))
+            openMultipleDocumentsResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
         }
 
         amMbPickContact.setOnClickListener {
