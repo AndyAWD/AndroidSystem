@@ -133,6 +133,14 @@ class MainActivity : AppCompatActivity() {
                 getUriForFile(this, "$packageName${BaseConstants.DOT_FILEPROVIDER}", picturePath)
             takeVideoResultLauncher.launch(uri)
         }
+
+        amMbLancer.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString(BaseConstants.NAME, "CuChulainn")
+            bundle.putString(BaseConstants.GENDER, "male")
+
+            lancerActivityResultContract.launch(bundle)
+        }
     }
 
     private val resultLauncher =
@@ -243,5 +251,10 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.TakeVideo()) { bitmap ->
             Log.d("maho", "回傳: $bitmap")
             amIvTakeVideo.setImageBitmap(bitmap)
+        }
+
+    private val lancerActivityResultContract =
+        registerForActivityResult(LancerActivityResultContract()) { weapon ->
+            Log.d("maho", "回傳: $weapon")
         }
 }

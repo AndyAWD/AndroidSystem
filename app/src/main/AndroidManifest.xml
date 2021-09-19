@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSystem">
-
+        <activity
+            android:name=".LancerActivity"
+            android:exported="true" />
         <activity
             android:name=".ArcherActivity"
             android:exported="true" />
@@ -36,4 +38,5 @@
                 android:resource="@xml/tool_provider_paths" />
         </provider>
     </application>
+
 </manifest>

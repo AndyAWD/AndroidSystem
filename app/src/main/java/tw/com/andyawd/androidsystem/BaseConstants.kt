@@ -6,5 +6,7 @@ class BaseConstants {
         const val WEAPON = "weapon"
         const val NAME = "name"
         const val DOT_FILEPROVIDER = ".fileprovider"
+        const val STRING_EMPTY = ""
+        const val GENDER = "gender"
     }
 }
