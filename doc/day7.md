@@ -132,4 +132,4 @@ D/maho: 回傳: Gae Bolg
 ````
 
 程式碼放在`feature/createContracts`分支    
-[https://github.com/AndyAWD/AndroidSystem/tree/feature/result](https://github.com/AndyAWD/AndroidSystem/tree/feature/createContracts)
+[https://github.com/AndyAWD/AndroidSystem/tree/feature/createContracts](https://github.com/AndyAWD/AndroidSystem/tree/feature/createContracts)
