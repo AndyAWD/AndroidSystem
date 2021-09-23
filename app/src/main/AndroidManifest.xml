@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidSystem">
         <activity
+            android:name=".CropLensActivity"
+            android:exported="true" />
+        <activity
             android:name=".LancerActivity"
             android:exported="true" />
         <activity

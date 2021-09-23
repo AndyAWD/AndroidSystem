@@ -141,6 +141,11 @@ class MainActivity : AppCompatActivity() {
 
             lancerActivityResultContract.launch(bundle)
         }
+
+        amMbCropLensPicture.setOnClickListener {
+            val intent = Intent(this, CropLensActivity::class.java)
+            resultLauncher.launch(intent)
+        }
     }
 
     private val resultLauncher =
