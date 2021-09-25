@@ -82,8 +82,11 @@ class CropLensActivity : AppCompatActivity() {
             ) { path, uri ->
                 Log.d("maho", "s1: $path / uri1: $uri")
 
-                aclIvPackageNamePicture.setImageURI(getPictureUri(packageNameFile))
-                aclIvPhonePicture.setImageURI(getPictureUri(phoneFile))
             }
+
+            aclIvPackageNamePicture.setImageURI(getPictureUri(packageNameFile))
+
+            aclIvPhonePicture.setImageURI(null)
+            aclIvPhonePicture.setImageURI(getPictureUri(phoneFile))
         }
 }
