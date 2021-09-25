@@ -68,7 +68,7 @@ class CropLensActivity : AppCompatActivity() {
             }
 
             val packageNameFile =
-                File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "001.jpg")
+                File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "002.jpg")
 
             val phoneFile = File(
                 Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
