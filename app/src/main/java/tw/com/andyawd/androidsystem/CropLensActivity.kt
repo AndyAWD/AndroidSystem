@@ -34,7 +34,7 @@ class CropLensActivity : AppCompatActivity() {
 
             val phoneFile = File(
                 Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                "001.jpg"
+                "002.jpg"
             )
 
             val uri = getPictureUri(phoneFile)
@@ -68,11 +68,11 @@ class CropLensActivity : AppCompatActivity() {
             }
 
             val packageNameFile =
-                File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "002.jpg")
+                File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "001.jpg")
 
             val phoneFile = File(
                 Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                "001.jpg"
+                "002.jpg"
             )
 
             MediaScannerConnection.scanFile(
@@ -80,7 +80,7 @@ class CropLensActivity : AppCompatActivity() {
                 arrayOf(packageNameFile.toString(), phoneFile.toString()),
                 null
             ) { path, uri ->
-                Log.d("maho", "s1: $path / uri1: $uri")
+                Log.d("maho", "${Thread.currentThread().name}  path: $path / uri: $uri")
 
             }
 
