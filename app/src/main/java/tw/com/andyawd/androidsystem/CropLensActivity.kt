@@ -1,9 +1,13 @@
 package tw.com.andyawd.androidsystem
 
+import android.content.ContentUris
+import android.content.ContentValues
 import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -38,6 +42,24 @@ class CropLensActivity : AppCompatActivity() {
             )
 
             val uri = getPictureUri(phoneFile)
+
+            takePictureResultLauncher.launch(uri)
+        }
+
+        aclMbCreateMediaStorePicture.setOnClickListener {
+            val contentValue = ContentValues().apply {
+                this.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, "003.jpg")
+                this.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    this.put(
+                        MediaStore.Images.ImageColumns.RELATIVE_PATH,
+                        "${Environment.DIRECTORY_PICTURES}/AndroidSystem"
+                    )
+                }
+            }
+
+            val uri =
+                contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValue)
 
             takePictureResultLauncher.launch(uri)
         }
@@ -88,5 +110,26 @@ class CropLensActivity : AppCompatActivity() {
 
             aclIvPhonePicture.setImageURI(null)
             aclIvPhonePicture.setImageURI(getPictureUri(phoneFile))
+
+
+            val selection = "${MediaStore.Images.ImageColumns.DISPLAY_NAME} = '003.jpg'"
+            val orderBy = "${MediaStore.Images.ImageColumns.DATE_ADDED} DESC"
+
+            val uriQuery = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                null,
+                selection,
+                null,
+                orderBy
+            ) ?: return@registerForActivityResult
+
+            uriQuery.moveToFirst()
+
+            val pictureId =
+                uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+            val uri =
+                ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, pictureId)
+
+            aclIvMediaStorePicture.setImageURI(uri)
         }
 }
