@@ -13,4 +13,10 @@ class ExampleUnitTest {
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
     }
+
+    @Test
+    fun permissions_text_return_save() {
+        val text = PermissionsTransformer().getText(PermissionsTransformer.WRITE_EXTERNAL_STORAGE)
+        assertEquals(PermissionsTransformer.STORAGE, text)
+    }
 }

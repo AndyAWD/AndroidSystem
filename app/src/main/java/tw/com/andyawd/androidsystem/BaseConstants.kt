@@ -8,5 +8,6 @@ class BaseConstants {
         const val DOT_FILEPROVIDER = ".fileprovider"
         const val STRING_EMPTY = ""
         const val GENDER = "gender"
+        const val READ_WRITE_PERMISSIONS = 100
     }
 }
