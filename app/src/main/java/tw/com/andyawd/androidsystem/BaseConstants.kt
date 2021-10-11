@@ -9,5 +9,7 @@ class BaseConstants {
         const val STRING_EMPTY = ""
         const val GENDER = "gender"
         const val READ_WRITE_PERMISSIONS = 100
+        const val CROP_PERMISSIONS = 101
+        const val PICTURE_NAME = "picture_name"
     }
 }
