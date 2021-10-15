@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -139,7 +140,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
     private fun startTakePictureWithCrop() {
 
         var uri: Uri? = null
-        val pictureName = "005_${System.currentTimeMillis()}.jpg"
+        val pictureName = "006_${System.currentTimeMillis()}.jpg"
 
         val sharedPreferences = getSharedPreferences(BaseConstants.ANDROID_SYSTEM, MODE_PRIVATE)
         sharedPreferences.edit {
@@ -173,7 +174,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
             )
 
             uri = getPictureUri(phoneFile)
-
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -290,7 +290,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
 
             if (!isTakePicture) {
-
                 return@registerForActivityResult
             }
 
@@ -342,12 +341,12 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
     private val takePictureWithCropResultLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
 
+            val sharedPreferences = getSharedPreferences(BaseConstants.ANDROID_SYSTEM, MODE_PRIVATE)
+            val pictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "") ?: ""
+
             if (!isTakePicture) {
                 return@registerForActivityResult
             }
-
-            val sharedPreferences = getSharedPreferences(BaseConstants.ANDROID_SYSTEM, MODE_PRIVATE)
-            val pictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "") ?: ""
 
             val intent = Intent("com.android.camera.action.CROP").apply {
                 this.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -358,7 +357,11 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
                 this.putExtra("scale", true)
             }
 
-            val cropPictureName = "005_crop_${System.currentTimeMillis()}.jpg"
+            val cropPictureName = "006_crop_${System.currentTimeMillis()}.jpg"
+
+            sharedPreferences.edit {
+                this.putString(BaseConstants.CROP_PICTURE_NAME, cropPictureName)
+            }
 
             val phoneFile = File(
                 Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
@@ -442,6 +445,60 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
     private val cropPictureResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            Log.d("maho", "activityResult: $activityResult")
+
+            val sharedPreferences = getSharedPreferences(BaseConstants.ANDROID_SYSTEM, MODE_PRIVATE)
+            val cropPhoneFileName =
+                sharedPreferences.getString(BaseConstants.CROP_PICTURE_NAME, "") ?: ""
+
+
+            if (activityResult.resultCode != RESULT_OK) {
+
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                    val file = File(
+                        Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
+                        cropPhoneFileName
+                    )
+
+                    file.delete()
+                }
+
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Log.d("maho", "Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q")
+
+                    val selection =
+                        "${MediaStore.Images.ImageColumns.DISPLAY_NAME} = '$cropPhoneFileName'"
+                    val orderBy = "${MediaStore.Images.ImageColumns.DATE_ADDED} DESC"
+
+                    val uriQuery = contentResolver.query(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        null,
+                        selection,
+                        null,
+                        orderBy
+                    ) ?: return@registerForActivityResult
+
+                    uriQuery.moveToFirst()
+
+                    val pictureId =
+                        uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+
+                    val uri = ContentUris.withAppendedId(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                        pictureId
+                    )
+
+                    contentResolver.delete(uri, null, null)
+
+
+//                    uri = contentResolver.insert(
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                        contentValue
+                }
+
+            }
+
 //            MediaScannerConnection.scanFile(this, arrayOf(activityResult.toString()), null) { _, _ ->
 //
 //            }

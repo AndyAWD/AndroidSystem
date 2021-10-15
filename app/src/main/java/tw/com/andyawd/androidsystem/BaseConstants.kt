@@ -11,5 +11,6 @@ class BaseConstants {
         const val READ_WRITE_PERMISSIONS = 100
         const val CROP_PERMISSIONS = 101
         const val PICTURE_NAME = "picture_name"
+        const val CROP_PICTURE_NAME = "crop_picture_name"
     }
 }
