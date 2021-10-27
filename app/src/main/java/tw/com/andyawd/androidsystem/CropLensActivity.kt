@@ -98,11 +98,61 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
     private val getAlbumResultLauncher =
         registerForActivityResult(ActivityResultContracts.GetContent()) { pictureUri ->
-            Log.d("maho", "pictureUri: $pictureUri")
 
             val aa = Uri.parse(pictureUri.toString())
 
+            Log.d("maho", "pictureUri: $pictureUri")
+            Log.d("maho", "aa: $aa")
+
             val pictureName = "007_crop_${System.currentTimeMillis()}.jpg"
+
+            //aclIvPicturePreview.setImageURI(aa)
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+
+                val permissionList = arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+
+                if (!EasyPermissions.hasPermissions(this, *permissionList)) {
+                    EasyPermissions.requestPermissions(
+                        this,
+                        "請提供讀寫檔案權限",
+                        BaseConstants.CROP_ALBUM_PERMISSIONS,
+                        *permissionList
+                    )
+                    return@registerForActivityResult
+                }
+
+                if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
+                    return@registerForActivityResult
+                }
+
+                val phoneFile = File(
+                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
+                    pictureName
+                )
+
+                //val uri = getPictureUri(phoneFile)
+                val uri = Uri.fromFile(phoneFile)
+
+                Log.d("maho", "001: $uri")
+
+                val intent = Intent("com.android.camera.action.CROP").apply {
+                    this.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    this.putExtra("crop", true)
+                    this.putExtra("return-data", false)
+                    this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+                    this.putExtra("scale", true)
+                    this.setDataAndType(aa, "image/*")
+                    this.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                    //this.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, uri)
+                }
+
+                albumResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val contentValue = ContentValues().apply {
@@ -137,6 +187,8 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
     private val albumResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
             Log.d("maho", "it: $it")
+
+            //aclIvPicturePreview.setImageURI(getPictureUri(it.data.toString()))
         }
 
 
