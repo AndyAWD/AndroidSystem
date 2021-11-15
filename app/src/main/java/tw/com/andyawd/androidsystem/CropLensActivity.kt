@@ -468,8 +468,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
             }
 
             val intent = Intent("com.android.camera.action.CROP").apply {
-                this.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                this.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 this.putExtra("crop", true)
                 this.putExtra("return-data", false)
                 this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
@@ -496,6 +494,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
                 val pictureUri = Uri.fromFile(phoneFile)
                 val cropUri = Uri.fromFile(cropPhoneFile)
 
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.setDataAndType(pictureUri, "image/*")
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
 
@@ -508,6 +507,8 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
                 val pictureUri = getPictureUri(phoneFile)
                 val cropUri = getPictureUri(cropPhoneFile)
 
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.setDataAndType(pictureUri, "image/*")
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
                 intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
@@ -553,6 +554,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
                     contentValue
                 )
 
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.setDataAndType(pictureUri, "image/*")
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
 
