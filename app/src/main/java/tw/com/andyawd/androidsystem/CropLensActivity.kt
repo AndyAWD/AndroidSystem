@@ -12,7 +12,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
@@ -91,8 +90,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
     }
 
     private fun startAlbumWithCrop() {
-
-        Log.d("maho", "startAlbumWithCrop")
         getAlbumResultLauncher.launch("image/*")
     }
 
@@ -202,7 +199,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
     private val albumResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-            Log.d("maho", "albumResultLauncher: $it")
+
         }
 
     private fun startTakePicture() {
@@ -566,8 +563,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
     private val cropPictureResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            Log.d("maho", "activityResult: $activityResult")
-
             val sharedPreferences = getSharedPreferences(BaseConstants.ANDROID_SYSTEM, MODE_PRIVATE)
             val cropPhoneFileName =
                 sharedPreferences.getString(BaseConstants.CROP_PICTURE_NAME, "") ?: ""
@@ -586,8 +581,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    Log.d("maho", "Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q")
-
                     val selection =
                         "${MediaStore.Images.ImageColumns.DISPLAY_NAME} = '$cropPhoneFileName'"
                     val orderBy = "${MediaStore.Images.ImageColumns.DATE_ADDED} DESC"
