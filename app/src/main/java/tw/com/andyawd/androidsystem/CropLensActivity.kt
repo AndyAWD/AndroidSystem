@@ -93,115 +93,6 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
         getAlbumResultLauncher.launch("image/*")
     }
 
-    private val getAlbumResultLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { pictureUri ->
-            val pictureName = "007_crop_${System.currentTimeMillis()}.jpg"
-
-            val intent = Intent("com.android.camera.action.CROP").apply {
-                this.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                this.putExtra("crop", true)
-                this.putExtra("return-data", false)
-                this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-                this.putExtra("scale", true)
-                this.setDataAndType(pictureUri, "image/*")
-            }
-
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-
-                val permissionList = arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-
-                if (!EasyPermissions.hasPermissions(this, *permissionList)) {
-                    EasyPermissions.requestPermissions(
-                        this,
-                        "請提供讀寫檔案權限",
-                        BaseConstants.CROP_ALBUM_PERMISSIONS,
-                        *permissionList
-                    )
-                    return@registerForActivityResult
-                }
-
-                if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
-                    return@registerForActivityResult
-                }
-
-                val cropPhoneFile = File(
-                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                    pictureName
-                )
-
-                val cropUri = Uri.fromFile(cropPhoneFile)
-
-                intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
-
-                albumResultLauncher.launch(intent)
-                return@registerForActivityResult
-            }
-
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-
-                val permissionList = arrayOf(
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                )
-
-                if (!EasyPermissions.hasPermissions(this, *permissionList)) {
-                    EasyPermissions.requestPermissions(
-                        this,
-                        "請提供讀寫檔案權限",
-                        BaseConstants.CROP_ALBUM_PERMISSIONS,
-                        *permissionList
-                    )
-                    return@registerForActivityResult
-                }
-
-                if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
-                    return@registerForActivityResult
-                }
-
-                val cropPhoneFile = File(
-                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                    pictureName
-                )
-
-                val cropUri = Uri.fromFile(cropPhoneFile)
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
-
-                albumResultLauncher.launch(intent)
-                return@registerForActivityResult
-            }
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                val contentValue = ContentValues().apply {
-                    this.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, pictureName)
-                    this.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg")
-                    this.put(
-                        MediaStore.Images.ImageColumns.RELATIVE_PATH,
-                        "${Environment.DIRECTORY_PICTURES}/AndroidSystem"
-                    )
-                }
-
-                val cropUri = contentResolver.insert(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    contentValue
-                )
-
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
-
-                albumResultLauncher.launch(intent)
-                return@registerForActivityResult
-            }
-        }
-
-    private val albumResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
-
-        }
-
     private fun startTakePicture() {
 
         var uri: Uri? = null
@@ -604,20 +495,126 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
                     )
 
                     contentResolver.delete(uri, null, null)
-
-
-//                    uri = contentResolver.insert(
-//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-//                        contentValue
                 }
 
             }
 
-//            MediaScannerConnection.scanFile(this, arrayOf(activityResult.toString()), null) { _, _ ->
-//
-//            }
+            MediaScannerConnection.scanFile(
+                this,
+                arrayOf(activityResult.toString()),
+                null
+            ) { _, _ ->
 
-            //aclIvPicturePreview.setImageURI(activityResult)
+            }
+        }
+
+    private val getAlbumResultLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { pictureUri ->
+            val pictureName = "007_crop_${System.currentTimeMillis()}.jpg"
+
+            val intent = Intent("com.android.camera.action.CROP").apply {
+                this.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                this.putExtra("crop", true)
+                this.putExtra("return-data", false)
+                this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+                this.putExtra("scale", true)
+                this.setDataAndType(pictureUri, "image/*")
+            }
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+
+                val permissionList = arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+
+                if (!EasyPermissions.hasPermissions(this, *permissionList)) {
+                    EasyPermissions.requestPermissions(
+                        this,
+                        "請提供讀寫檔案權限",
+                        BaseConstants.CROP_ALBUM_PERMISSIONS,
+                        *permissionList
+                    )
+                    return@registerForActivityResult
+                }
+
+                if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
+                    return@registerForActivityResult
+                }
+
+                val cropPhoneFile = File(
+                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
+                    pictureName
+                )
+
+                val cropUri = Uri.fromFile(cropPhoneFile)
+
+                intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                albumResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+
+                val permissionList = arrayOf(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+
+                if (!EasyPermissions.hasPermissions(this, *permissionList)) {
+                    EasyPermissions.requestPermissions(
+                        this,
+                        "請提供讀寫檔案權限",
+                        BaseConstants.CROP_ALBUM_PERMISSIONS,
+                        *permissionList
+                    )
+                    return@registerForActivityResult
+                }
+
+                if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
+                    return@registerForActivityResult
+                }
+
+                val cropPhoneFile = File(
+                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
+                    pictureName
+                )
+
+                val cropUri = Uri.fromFile(cropPhoneFile)
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                albumResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val contentValue = ContentValues().apply {
+                    this.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, pictureName)
+                    this.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg")
+                    this.put(
+                        MediaStore.Images.ImageColumns.RELATIVE_PATH,
+                        "${Environment.DIRECTORY_PICTURES}/AndroidSystem"
+                    )
+                }
+
+                val cropUri = contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValue
+                )
+
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                albumResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+        }
+
+    private val albumResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { it ->
+
         }
 
 
