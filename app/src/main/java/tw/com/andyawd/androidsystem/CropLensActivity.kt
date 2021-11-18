@@ -90,7 +90,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
     }
 
     private fun startAlbumWithCrop() {
-        getAlbumResultLauncher.launch("image/*")
+        getAlbumResultLauncher.launch(arrayOf("image/*"))
     }
 
     private fun startTakePicture() {
@@ -509,7 +509,7 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
         }
 
     private val getAlbumResultLauncher =
-        registerForActivityResult(ActivityResultContracts.GetContent()) { pictureUri ->
+        registerForActivityResult(ActivityResultContracts.OpenDocument()) { pictureUri ->
             val pictureName = "007_crop_${System.currentTimeMillis()}.jpg"
 
             val intent = Intent("com.android.camera.action.CROP").apply {
