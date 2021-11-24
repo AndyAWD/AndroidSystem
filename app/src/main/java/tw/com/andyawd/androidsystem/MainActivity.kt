@@ -1,20 +1,13 @@
 package tw.com.andyawd.androidsystem
 
-import android.Manifest
-import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.FileProvider.getUriForFile
+import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.credentials.Credential
-import com.google.android.gms.auth.api.credentials.Credentials
-import com.google.android.gms.auth.api.credentials.CredentialsOptions
-import com.google.android.gms.auth.api.credentials.HintRequest
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -27,125 +20,129 @@ class MainActivity : AppCompatActivity() {
         initClickListener()
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        return findNavController(R.id.amMainFragment).navigateUp()
+    }
+
     private fun initClickListener() {
-        amMbSaber.setOnClickListener {
-            val intent = Intent(this, SaberActivity::class.java).apply {
-                this.putExtra(BaseConstants.NAME, "Arthur")
-            }
-
-            resultLauncher.launch(intent)
-        }
-
-        amMbArcher.setOnClickListener {
-            val intent = Intent(this, ArcherActivity::class.java).apply {
-                this.putExtra(BaseConstants.NAME, "Emiya")
-            }
-
-            resultLauncher.launch(intent)
-        }
-
-        amMbCreateDocument.setOnClickListener {
-            createDocumentResultLauncher.launch("saberEat.jpg")
-        }
-
-        amMbGetContent.setOnClickListener {
-            getContentResultLauncher.launch("image/*")
-        }
-
-        amMbGetMultipleContents.setOnClickListener {
-            getMultipleContentsResultLauncher.launch("image/*")
-        }
-
-        amMbOpenDocument.setOnClickListener {
-            openDocumentResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
-        }
-
-        amMbOpenDocumentTree.setOnClickListener {
-            openDocumentTreeResultLauncher.launch(null)
-        }
-
-        amMbOpenMultipleDocuments.setOnClickListener {
-            openMultipleDocumentsResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
-        }
-
-        amMbPickContact.setOnClickListener {
-            pickContactResultLauncher.launch(null)
-        }
-
-        amMbRequestMultiplePermissions.setOnClickListener {
-            requestMultiplePermissionsResultLauncher.launch(
-                arrayOf(
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            )
-        }
-
-        amMbRequestPermission.setOnClickListener {
-            requestPermissionResultLauncher.launch(Manifest.permission.CAMERA)
-        }
-
-        amMbStartIntentSenderForResult.setOnClickListener {
-            val hintRequest = HintRequest
-                .Builder()
-                .setPhoneNumberIdentifierSupported(true)
-                .build()
-
-            val credentialsOptions = CredentialsOptions
-                .Builder()
-                .forceEnableSaveDialog()
-                .build()
-
-            val credentials = Credentials
-                .getClient(this, credentialsOptions)
-                .getHintPickerIntent(hintRequest)
-
-            startIntentSenderForResultResultLauncher.launch(
-                IntentSenderRequest
-                    .Builder(credentials)
-                    .build()
-            )
-        }
-
-        amMbTakePicture.setOnClickListener {
-            takePictureCreateDocumentResultLauncher.launch("002.jpg")
-        }
-
-        amMbTakePicture2.setOnClickListener {
-            val picturePath = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "003.jpg")
-            val uri =
-                getUriForFile(this, "$packageName${BaseConstants.DOT_FILEPROVIDER}", picturePath)
-
-            takePictureResultLauncher.launch(uri)
-        }
-
-        amMbTakePicturePreview.setOnClickListener {
-            takePicturePreviewResultLauncher.launch(null)
-        }
-
-        amMbTakeVideo.setOnClickListener {
-            //路徑為空，會儲存到 DCIM 資料夾
-            //takeVideoResultLauncher.launch(null)
-
-            //指定儲存路徑
-            val picturePath = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "005.mp4")
-            val uri =
-                getUriForFile(this, "$packageName${BaseConstants.DOT_FILEPROVIDER}", picturePath)
-            takeVideoResultLauncher.launch(uri)
-        }
-
-        amMbLancer.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putString(BaseConstants.NAME, "CuChulainn")
-            bundle.putString(BaseConstants.GENDER, "male")
-
-            lancerActivityResultContract.launch(bundle)
-        }
-
-        amMbCropLensPicture.setOnClickListener {
-            val intent = Intent(this, CropLensActivity::class.java)
-            resultLauncher.launch(intent)
-        }
+//        amMbSaber.setOnClickListener {
+//            val intent = Intent(this, SaberActivity::class.java).apply {
+//                this.putExtra(BaseConstants.NAME, "Arthur")
+//            }
+//
+//            resultLauncher.launch(intent)
+//        }
+//
+//        amMbArcher.setOnClickListener {
+//            val intent = Intent(this, ArcherActivity::class.java).apply {
+//                this.putExtra(BaseConstants.NAME, "Emiya")
+//            }
+//
+//            resultLauncher.launch(intent)
+//        }
+//
+//        amMbCreateDocument.setOnClickListener {
+//            createDocumentResultLauncher.launch("saberEat.jpg")
+//        }
+//
+//        amMbGetContent.setOnClickListener {
+//            getContentResultLauncher.launch("image/*")
+//        }
+//
+//        amMbGetMultipleContents.setOnClickListener {
+//            getMultipleContentsResultLauncher.launch("image/*")
+//        }
+//
+//        amMbOpenDocument.setOnClickListener {
+//            openDocumentResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
+//        }
+//
+//        amMbOpenDocumentTree.setOnClickListener {
+//            openDocumentTreeResultLauncher.launch(null)
+//        }
+//
+//        amMbOpenMultipleDocuments.setOnClickListener {
+//            openMultipleDocumentsResultLauncher.launch(arrayOf("image/jpeg", "video/mp4"))
+//        }
+//
+//        amMbPickContact.setOnClickListener {
+//            pickContactResultLauncher.launch(null)
+//        }
+//
+//        amMbRequestMultiplePermissions.setOnClickListener {
+//            requestMultiplePermissionsResultLauncher.launch(
+//                arrayOf(
+//                    Manifest.permission.CAMERA,
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                )
+//            )
+//        }
+//
+//        amMbRequestPermission.setOnClickListener {
+//            requestPermissionResultLauncher.launch(Manifest.permission.CAMERA)
+//        }
+//
+//        amMbStartIntentSenderForResult.setOnClickListener {
+//            val hintRequest = HintRequest
+//                .Builder()
+//                .setPhoneNumberIdentifierSupported(true)
+//                .build()
+//
+//            val credentialsOptions = CredentialsOptions
+//                .Builder()
+//                .forceEnableSaveDialog()
+//                .build()
+//
+//            val credentials = Credentials
+//                .getClient(this, credentialsOptions)
+//                .getHintPickerIntent(hintRequest)
+//
+//            startIntentSenderForResultResultLauncher.launch(
+//                IntentSenderRequest
+//                    .Builder(credentials)
+//                    .build()
+//            )
+//        }
+//
+//        amMbTakePicture.setOnClickListener {
+//            takePictureCreateDocumentResultLauncher.launch("002.jpg")
+//        }
+//
+//        amMbTakePicture2.setOnClickListener {
+//            val picturePath = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "003.jpg")
+//            val uri =
+//                getUriForFile(this, "$packageName${BaseConstants.DOT_FILEPROVIDER}", picturePath)
+//
+//            takePictureResultLauncher.launch(uri)
+//        }
+//
+//        amMbTakePicturePreview.setOnClickListener {
+//            takePicturePreviewResultLauncher.launch(null)
+//        }
+//
+//        amMbTakeVideo.setOnClickListener {
+//            //路徑為空，會儲存到 DCIM 資料夾
+//            //takeVideoResultLauncher.launch(null)
+//
+//            //指定儲存路徑
+//            val picturePath = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "005.mp4")
+//            val uri =
+//                getUriForFile(this, "$packageName${BaseConstants.DOT_FILEPROVIDER}", picturePath)
+//            takeVideoResultLauncher.launch(uri)
+//        }
+//
+//        amMbLancer.setOnClickListener {
+//            val bundle = Bundle()
+//            bundle.putString(BaseConstants.NAME, "CuChulainn")
+//            bundle.putString(BaseConstants.GENDER, "male")
+//
+//            lancerActivityResultContract.launch(bundle)
+//        }
+//
+//        amMbCropLensPicture.setOnClickListener {
+//            val intent = Intent(this, CropLensActivity::class.java)
+//            resultLauncher.launch(intent)
+//        }
     }
 
     private val resultLauncher =
@@ -241,7 +238,7 @@ class MainActivity : AppCompatActivity() {
     private val takePicturePreviewResultLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
             Log.d("maho", "回傳: $bitmap")
-            amIvTakePicturePreview.setImageBitmap(bitmap)
+//            amIvTakePicturePreview.setImageBitmap(bitmap)
 
             val picturePath = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "004.jpg")
             val fileOutputStream = FileOutputStream(picturePath)
@@ -255,7 +252,7 @@ class MainActivity : AppCompatActivity() {
     private val takeVideoResultLauncher =
         registerForActivityResult(ActivityResultContracts.TakeVideo()) { bitmap ->
             Log.d("maho", "回傳: $bitmap")
-            amIvTakeVideo.setImageBitmap(bitmap)
+//            amIvTakeVideo.setImageBitmap(bitmap)
         }
 
     private val lancerActivityResultContract =

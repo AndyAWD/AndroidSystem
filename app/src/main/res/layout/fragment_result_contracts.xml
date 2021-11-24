@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPageFragment">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbSaber"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="跳轉 SaberActivity"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbArcher"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="跳轉 ArcherActivity"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbSaber" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbCreateDocument"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="建立檔案取得路徑\nCreateDocument()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbArcher" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbGetContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="指定一個類型檔案，取得路徑\nGetContent()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbCreateDocument" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbGetMultipleContents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="指定多個類型檔案，取得陣列路徑\nGetMultipleContents()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbGetContent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbOpenDocument"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="指定多個類型檔案，取得路徑\nOpenDocument()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbGetMultipleContents" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbOpenDocumentTree"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="指定資料夾，取得路徑\nOpenDocumentTree()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbOpenDocument" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbOpenMultipleDocuments"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="指定多個類型檔案，取得陣列路徑\nOpenMultipleDocuments()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbOpenDocumentTree" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbPickContact"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="選擇單個連絡人\nPickContact()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbOpenMultipleDocuments" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbRequestMultiplePermissions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="詢問多個系統權限\nRequestMultiplePermissions()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbPickContact" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbRequestPermission"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="詢問一個系統權限\nRequestPermission()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbRequestMultiplePermissions" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbStartIntentSenderForResult"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="窩不知道\nStartIntentSenderForResult()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbRequestPermission" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbTakePicture"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="用 CreateDocument() 建立檔案再儲存照片\nTakePicture()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbStartIntentSenderForResult" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbTakePicture2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="用 File() 建立檔案再儲存照片\nTakePicture()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbTakePicture" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbTakePicturePreview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="照片預覽縮圖\nTakePicturePreview()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbTakePicture2" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/amIvTakePicturePreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbTakePicturePreview" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbTakeVideo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="錄製影片，取得影片縮圖\nTakeVideo()"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amIvTakePicturePreview" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/amIvTakeVideo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbTakeVideo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbLancer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="跳轉 LancerActivity"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amIvTakeVideo" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/amMbCropLensPicture"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="8dp"
+        android:text="跳轉拍照剪裁"
+        android:textAllCaps="false"
+        app:autoSizeTextType="uniform"
+        app:layout_constraintDimensionRatio="5:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/amMbLancer" />
+</androidx.constraintlayout.widget.ConstraintLayout>
