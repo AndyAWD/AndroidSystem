@@ -15,7 +15,9 @@ class LancerActivity : AppCompatActivity() {
         val name = bundle?.getString(BaseConstants.NAME)
         val gender = bundle?.getString(BaseConstants.GENDER)
 
-        Log.d("maho", "姓名: $name / 性別：$gender")
+        val showLog = "姓名: $name / 性別：$gender"
+        Log.d("maho", showLog)
+        alMTVLog.text = showLog
 
         initClickListener()
     }

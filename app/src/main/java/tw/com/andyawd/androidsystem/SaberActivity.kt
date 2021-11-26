@@ -12,6 +12,8 @@ class SaberActivity : AppCompatActivity() {
         setContentView(R.layout.activity_saber)
 
         val name = intent.getStringExtra(BaseConstants.NAME)
+
+        asMTVLog.text = name
         Log.d("maho", "姓名: $name")
 
         initClickListener()

@@ -1,5 +1,6 @@
 package tw.com.andyawd.androidsystem
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.os.Environment
@@ -8,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.google.android.gms.auth.api.credentials.Credential
+import kotlinx.android.synthetic.main.activity_main.*
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -25,22 +27,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initClickListener() {
-//        amMbSaber.setOnClickListener {
-//            val intent = Intent(this, SaberActivity::class.java).apply {
-//                this.putExtra(BaseConstants.NAME, "Arthur")
-//            }
-//
-//            resultLauncher.launch(intent)
-//        }
-//
-//        amMbArcher.setOnClickListener {
-//            val intent = Intent(this, ArcherActivity::class.java).apply {
-//                this.putExtra(BaseConstants.NAME, "Emiya")
-//            }
-//
-//            resultLauncher.launch(intent)
-//        }
-//
+        amMbResultContractsPage.setOnClickListener {
+            val intent = Intent(this, ResultContractsActivity::class.java)
+
+            resultLauncher.launch(intent)
+        }
+
 //        amMbCreateDocument.setOnClickListener {
 //            createDocumentResultLauncher.launch("saberEat.jpg")
 //        }
@@ -131,13 +123,7 @@ class MainActivity : AppCompatActivity() {
 //            takeVideoResultLauncher.launch(uri)
 //        }
 //
-//        amMbLancer.setOnClickListener {
-//            val bundle = Bundle()
-//            bundle.putString(BaseConstants.NAME, "CuChulainn")
-//            bundle.putString(BaseConstants.GENDER, "male")
-//
-//            lancerActivityResultContract.launch(bundle)
-//        }
+
 //
 //        amMbCropLensPicture.setOnClickListener {
 //            val intent = Intent(this, CropLensActivity::class.java)
@@ -147,12 +133,7 @@ class MainActivity : AppCompatActivity() {
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
-            if (RESULT_OK == activityResult.resultCode) {
-                Log.d(
-                    "maho",
-                    "回傳: ${activityResult.data?.getStringExtra(BaseConstants.WEAPON)}"
-                )
-            }
+            Log.d("maho", "回傳: $activityResult")
         }
 
     private val createDocumentResultLauncher =
@@ -253,10 +234,5 @@ class MainActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.TakeVideo()) { bitmap ->
             Log.d("maho", "回傳: $bitmap")
 //            amIvTakeVideo.setImageBitmap(bitmap)
-        }
-
-    private val lancerActivityResultContract =
-        registerForActivityResult(LancerActivityResultContract()) { weapon ->
-            Log.d("maho", "回傳: $weapon")
         }
 }

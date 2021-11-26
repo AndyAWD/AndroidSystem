@@ -12,6 +12,8 @@ class ArcherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_archer)
 
         val name = intent.getStringExtra(BaseConstants.NAME)
+
+        aaMTVLog.text = name
         Log.d("maho", "姓名: $name")
 
         initClickListener()
