@@ -281,8 +281,9 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
             uriQuery.moveToFirst()
 
-            val pictureId =
-                uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+            val id = uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+            val pictureId = uriQuery.getLong(id)
+
             val uri =
                 ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, pictureId)
 
@@ -329,8 +330,8 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
                 uriQuery.moveToFirst()
 
-                val pictureId =
-                    uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+                val id = uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+                val pictureId = uriQuery.getLong(id)
 
                 val uri = ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -420,8 +421,8 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
                 uriQuery.moveToFirst()
 
-                val pictureId =
-                    uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+                val id = uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+                val pictureId = uriQuery.getLong(id)
 
                 val pictureUri = ContentUris.withAppendedId(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -486,8 +487,8 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
 
                     uriQuery.moveToFirst()
 
-                    val pictureId =
-                        uriQuery.getLong(uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+                    val id = uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+                    val pictureId = uriQuery.getLong(id)
 
                     val uri = ContentUris.withAppendedId(
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI,

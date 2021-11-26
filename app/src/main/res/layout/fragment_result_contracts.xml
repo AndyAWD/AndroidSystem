@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/frcMbCreateDocument"
             android:layout_width="match_parent"
@@ -163,7 +162,7 @@
             app:layout_constraintTop_toBottomOf="@+id/frcMbRequestPermission" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/frcMbTakePicture"
+            android:id="@+id/frcMbTakePictureCreateDocument"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -178,7 +177,7 @@
             app:layout_constraintTop_toBottomOf="@+id/frcMbStartIntentSenderForResult" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/frcMbTakePicture2"
+            android:id="@+id/frcMbTakePictureFile"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginStart="8dp"
@@ -190,7 +189,7 @@
             app:layout_constraintDimensionRatio="5:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePicture" />
+            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePictureCreateDocument" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/frcMbTakePicturePreview"
@@ -205,15 +204,7 @@
             app:layout_constraintDimensionRatio="5:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePicture2" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/frcIvTakePicturePreview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePicturePreview" />
+            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePictureFile" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/frcMbTakeVideo"
@@ -228,29 +219,17 @@
             app:layout_constraintDimensionRatio="5:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frcIvTakePicturePreview" />
+            app:layout_constraintTop_toBottomOf="@+id/frcMbTakePicturePreview" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/frcIvTakeVideo"
+            android:id="@+id/frcIvPicturePreview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="600dp"
+            android:layout_margin="8dp"
+            android:background="@color/light_cadfeb"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/frcMbTakeVideo" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/frcMbCropLensPicture"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:padding="8dp"
-            android:text="跳轉拍照剪裁"
-            android:textAllCaps="false"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintDimensionRatio="5:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/frcMbLancer" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
