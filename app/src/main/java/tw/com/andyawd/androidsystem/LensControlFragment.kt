@@ -85,7 +85,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
 
         flcMbCreatePhonePicture.setOnClickListener {
-            startTakePicture()
+            startCreatePhonePicture()
         }
     }
 
@@ -107,7 +107,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         )
     }
 
-    private fun startTakePicture() {
+    private fun startCreatePhonePicture() {
 
         var uri: Uri? = null
         val pictureName = getPictureFilename(PHONE_PICTURE)
@@ -164,7 +164,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             )
         }
 
-        createVersionCheckResultLauncher.launch(uri)
+        createPhoneResultLauncher.launch(uri)
     }
 
     private val createPackageNameResultLauncher =
@@ -197,7 +197,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             flcIvPicturePreview.setImageURI(getPictureUri(packageNameFile))
         }
 
-    private val createVersionCheckResultLauncher =
+    private val createPhoneResultLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
 
             if (!isTakePicture) {
@@ -273,7 +273,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
         if (BaseConstants.READ_WRITE_PERMISSIONS == requestCode) {
-            startTakePicture()
+            startCreatePhonePicture()
             return
         }
     }
@@ -309,5 +309,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         const val PACKAGE_NAME_PICTURE = "len001"
         const val PHONE_PICTURE = "len002"
+        const val CROP_PACKAGE_NAME_PICTURE = "lenCrop003"
+        const val CROP_PHONE_PICTURE = "lenCrop004"
     }
 }
