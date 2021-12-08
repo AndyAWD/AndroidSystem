@@ -1,8 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LensControlFragment">
+    tools:context=".CropLensActivity">
 
-</FrameLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/flcMbCreatePackageNamePicture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:text="在應用程式資料夾建立照片"
+            android:textAllCaps="false"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintDimensionRatio="5:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/flcMbCreatePhonePicture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:text="在圖片資料夾建立照片"
+            android:textAllCaps="false"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintDimensionRatio="5:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/flcMbCreatePackageNamePicture" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/flcMbCropPackageNamePicture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:text="在應用程式資料夾建立照片後剪裁圖片"
+            android:textAllCaps="false"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintDimensionRatio="5:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/flcMbCreatePhonePicture" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/flcMbCropPhonePicture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            android:padding="8dp"
+            android:text="在圖片資料夾建立照片後剪裁圖片"
+            android:textAllCaps="false"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintDimensionRatio="5:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/flcMbCropPackageNamePicture" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/flcIvPicturePreview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="4dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/flcMbCropPhonePicture"
+            tools:src="@tools:sample/backgrounds/scenic" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

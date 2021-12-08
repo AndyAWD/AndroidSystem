@@ -16,7 +16,8 @@ class ExampleUnitTest {
 
     @Test
     fun permissions_text_return_save() {
-        val text = PermissionsTransformer().getText(PermissionsTransformer.WRITE_EXTERNAL_STORAGE)
-        assertEquals(PermissionsTransformer.STORAGE, text)
+        val text =
+            EasyPermissionsTextTransformer().getPermissionsText(EasyPermissionsTextTransformer.WRITE_EXTERNAL_STORAGE)
+        assertEquals(EasyPermissionsTextTransformer.STORAGE, text)
     }
 }

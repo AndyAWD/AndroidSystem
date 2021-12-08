@@ -643,14 +643,14 @@ class CropLensActivity : AppCompatActivity(), PermissionCallbacks {
             resources.getString(R.string.permissions_denied),
             resources.getString(
                 R.string.permissions_setting_open,
-                PermissionsTransformer().getPermissionsList(perms)
+                EasyPermissionsTextTransformer().getPermissionsList(perms)
             )
         )
-
-        PermissionsDeniedAlertDialog(this).show(
-            "權限不足",
-            "請開啟以下權限：\n${PermissionsTransformer().getPermissionsList(perms)}"
-        )
+//
+//        PermissionsDeniedAlertDialog(this).show(
+//            "權限不足",
+//            "請開啟以下權限：\n${PermissionsTransformer().getPermissionsList(perms)}"
+//        )
     }
 
     override fun onRequestPermissionsResult(

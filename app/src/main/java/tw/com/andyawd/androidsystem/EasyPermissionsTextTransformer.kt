@@ -1,6 +1,6 @@
 package tw.com.andyawd.androidsystem
 
-class PermissionsTransformer {
+class EasyPermissionsTextTransformer {
     companion object {
         const val CALENDAR = "日曆"
         const val CAMERA = "相機"
@@ -40,7 +40,7 @@ class PermissionsTransformer {
         const val WRITE_EXTERNAL_STORAGE = "android.permission.WRITE_EXTERNAL_STORAGE"
     }
 
-    fun getText(perms: String): String {
+    fun getPermissionsText(perms: String): String {
         when (perms) {
             READ_CALENDAR,
             WRITE_CALENDAR -> return CALENDAR
@@ -75,11 +75,30 @@ class PermissionsTransformer {
         val permissionsList = HashSet<String>()
         val permissionsText = StringBuilder()
 
-        perms.forEach { it ->
-            permissionsList.add(getText(it))
+        perms.forEach {
+            permissionsList.add(getPermissionsText(it))
         }
 
-        permissionsList.forEach { it ->
+        permissionsList.forEach {
+            permissionsText.append(it)
+            permissionsText.append("\n")
+        }
+
+        return permissionsText
+    }
+
+    fun getPermissionsList(map: Map<String, Boolean>): StringBuilder {
+
+        val permissionsList = HashSet<String>()
+        val permissionsText = StringBuilder()
+
+        map.forEach {
+            if (it.value) {
+                permissionsList.add(getPermissionsText(it.key))
+            }
+        }
+
+        permissionsList.forEach {
             permissionsText.append(it)
             permissionsText.append("\n")
         }
