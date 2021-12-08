@@ -1,14 +1,18 @@
 package tw.com.andyawd.androidsystem
 
 import android.Manifest
+import android.content.ClipData
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Intent
+import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -86,6 +90,31 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         flcMbCreatePhonePicture.setOnClickListener {
             startCreatePhonePicture()
+        }
+
+        flcMbCropPackageNamePicture.setOnClickListener {
+            val pictureName = getPictureFilename(CROP_PACKAGE_NAME_PICTURE_BEFORE)
+
+            val sharedPreferences = requireActivity().getSharedPreferences(
+                BaseConstants.ANDROID_SYSTEM,
+                AppCompatActivity.MODE_PRIVATE
+            )
+
+            sharedPreferences.edit {
+                this.putString(BaseConstants.PICTURE_NAME, pictureName)
+            }
+
+            val packageNameFile = File(
+                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                pictureName
+            )
+            val uri = getPictureUri(packageNameFile)
+
+            createCropPackageNameResultLauncher.launch(uri)
+        }
+
+        flcMbCropPhonePicture.setOnClickListener {
+
         }
     }
 
@@ -166,6 +195,68 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         createPhoneResultLauncher.launch(uri)
     }
+
+    private val createCropPackageNameResultLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
+            if (!isTakePicture) {
+                return@registerForActivityResult
+            }
+
+            val intent = Intent("com.android.camera.action.CROP").apply {
+                this.putExtra("crop", true)
+                this.putExtra("return-data", false)
+                this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+                this.putExtra("scale", true)
+            }
+
+            val sharedPreferences = requireActivity().getSharedPreferences(
+                BaseConstants.ANDROID_SYSTEM,
+                AppCompatActivity.MODE_PRIVATE
+            )
+
+            val packagePictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "")
+            val packageNameFile = File(
+                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                packagePictureName ?: ""
+            )
+
+            val cropPackageName = getPictureFilename(CROP_PACKAGE_NAME_PICTURE_AFTER)
+            val cropPackageNameFile = File(
+                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                cropPackageName ?: ""
+            )
+
+            sharedPreferences.edit {
+                this.putString(BaseConstants.CROP_PICTURE_NAME, cropPackageName)
+            }
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                val pictureUri = Uri.fromFile(packageNameFile)
+                val cropUri = Uri.fromFile(cropPackageNameFile)
+
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(pictureUri, "image/*")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val pictureUri = getPictureUri(packageNameFile)
+                val cropUri = getPictureUri(cropPackageNameFile)
+
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(pictureUri, "image/*")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+                intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
+            }
+
+            cropPackageNameResultLauncher.launch(intent)
+        }
+
+    private val cropPackageNameResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            Log.d("maho", "activityResult: $activityResult")
+        }
 
     private val createPackageNameResultLauncher =
         registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
@@ -307,9 +398,11 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 }
             }
 
-        const val PACKAGE_NAME_PICTURE = "len001"
-        const val PHONE_PICTURE = "len002"
-        const val CROP_PACKAGE_NAME_PICTURE = "lenCrop003"
-        const val CROP_PHONE_PICTURE = "lenCrop004"
+        const val PACKAGE_NAME_PICTURE = "lenPackageName"
+        const val PHONE_PICTURE = "lenPhone"
+        const val CROP_PACKAGE_NAME_PICTURE_BEFORE = "lenPackageNameCropBefore"
+        const val CROP_PACKAGE_NAME_PICTURE_AFTER = "lenPackageNameCropAfter"
+        const val CROP_PHONE_PICTURE_BEFORE = "lenPhoneCropBefore"
+        const val CROP_PHONE_PICTURE_AFTER = "lenPhoneCropAfter"
     }
 }
