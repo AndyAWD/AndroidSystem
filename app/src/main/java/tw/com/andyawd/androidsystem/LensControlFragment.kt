@@ -1,10 +1,7 @@
 package tw.com.andyawd.androidsystem
 
 import android.Manifest
-import android.content.ClipData
-import android.content.ContentUris
-import android.content.ContentValues
-import android.content.Intent
+import android.content.*
 import android.graphics.Bitmap
 import android.media.MediaScannerConnection
 import android.net.Uri
@@ -43,6 +40,8 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -61,7 +60,15 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initComponent()
         initClickListener()
+    }
+
+    private fun initComponent() {
+        sharedPreferences = requireActivity().getSharedPreferences(
+            BaseConstants.ANDROID_SYSTEM,
+            AppCompatActivity.MODE_PRIVATE
+        )
     }
 
     private fun initClickListener() {
@@ -69,22 +76,11 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
             val pictureName = getPictureFilename(PACKAGE_NAME_PICTURE)
 
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                BaseConstants.ANDROID_SYSTEM,
-                AppCompatActivity.MODE_PRIVATE
-            )
-
             sharedPreferences.edit {
                 this.putString(BaseConstants.PICTURE_NAME, pictureName)
             }
 
-            val packageNameFile =
-                File(
-                    requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                    pictureName
-                )
-            val uri = getPictureUri(packageNameFile)
-
+            val uri = getPictureUri(getPackageNamePictureFile(pictureName))
             createPackageNameResultLauncher.launch(uri)
         }
 
@@ -95,21 +91,11 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         flcMbCropPackageNamePicture.setOnClickListener {
             val pictureName = getPictureFilename(CROP_PACKAGE_NAME_PICTURE_BEFORE)
 
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                BaseConstants.ANDROID_SYSTEM,
-                AppCompatActivity.MODE_PRIVATE
-            )
-
             sharedPreferences.edit {
                 this.putString(BaseConstants.PICTURE_NAME, pictureName)
             }
 
-            val packageNameFile = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                pictureName
-            )
-            val uri = getPictureUri(packageNameFile)
-
+            val uri = getPictureUri(getPackageNamePictureFile(pictureName))
             createCropPackageNameResultLauncher.launch(uri)
         }
 
@@ -117,6 +103,21 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
         }
     }
+
+    private fun refreshAlbum(uri: String) {
+        MediaScannerConnection.scanFile(requireActivity(), arrayOf(uri), null) { _, _ ->
+
+        }
+    }
+
+    private fun getPackageNamePictureFile(name: String) =
+        File(requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES), name)
+
+    private fun getPhonePictureFile(name: String) =
+        File(
+            Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
+            name
+        )
 
     private fun getPictureFilename(name: String) = "${name}_${System.currentTimeMillis()}.jpg"
 
@@ -138,12 +139,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
 
     private fun startCreatePhonePicture() {
 
-        var uri: Uri? = null
         val pictureName = getPictureFilename(PHONE_PICTURE)
-        val sharedPreferences = requireActivity().getSharedPreferences(
-            BaseConstants.ANDROID_SYSTEM,
-            AppCompatActivity.MODE_PRIVATE
-        )
 
         sharedPreferences.edit {
             this.putString(BaseConstants.PICTURE_NAME, pictureName)
@@ -159,7 +155,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 EasyPermissions.requestPermissions(
                     this,
                     "請提供讀寫檔案權限",
-                    BaseConstants.READ_WRITE_PERMISSIONS,
+                    BaseConstants.CREATE_PHONE_PICTURE_PERMISSIONS,
                     *permissionList
                 )
                 return
@@ -169,12 +165,11 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 return
             }
 
-            val phoneFile = File(
-                Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                pictureName
-            )
+            val uri = getPictureUri(getPhonePictureFile(pictureName))
 
-            uri = getPictureUri(phoneFile)
+            flcIvPicturePreview.setImageURI(uri)
+            createPhoneResultLauncher.launch(uri)
+            return
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -187,13 +182,15 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 )
             }
 
-            uri = requireActivity().contentResolver.insert(
+            val uri = requireActivity().contentResolver.insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValue
             )
-        }
 
-        createPhoneResultLauncher.launch(uri)
+            flcIvPicturePreview.setImageURI(uri)
+            createPhoneResultLauncher.launch(uri)
+            return
+        }
     }
 
     private val createCropPackageNameResultLauncher =
@@ -209,22 +206,12 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 this.putExtra("scale", true)
             }
 
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                BaseConstants.ANDROID_SYSTEM,
-                AppCompatActivity.MODE_PRIVATE
-            )
-
             val packagePictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "")
-            val packageNameFile = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                packagePictureName ?: ""
-            )
+                ?: return@registerForActivityResult
+            val packageNameFile = getPackageNamePictureFile(packagePictureName)
 
             val cropPackageName = getPictureFilename(CROP_PACKAGE_NAME_PICTURE_AFTER)
-            val cropPackageNameFile = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                cropPackageName ?: ""
-            )
+            val cropPackageNameFile = getPackageNamePictureFile(cropPackageName)
 
             sharedPreferences.edit {
                 this.putString(BaseConstants.CROP_PICTURE_NAME, cropPackageName)
@@ -237,6 +224,10 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.setDataAndType(pictureUri, "image/*")
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                flcIvPicturePreview.setImageURI(pictureUri)
+                cropPackageNameResultLauncher.launch(intent)
+                return@registerForActivityResult
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -248,14 +239,36 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 intent.setDataAndType(pictureUri, "image/*")
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
                 intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
-            }
 
-            cropPackageNameResultLauncher.launch(intent)
+                flcIvPicturePreview.setImageURI(pictureUri)
+                cropPackageNameResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
         }
 
     private val cropPackageNameResultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
             Log.d("maho", "activityResult: $activityResult")
+
+            val cropPackagePictureName =
+                sharedPreferences.getString(BaseConstants.CROP_PICTURE_NAME, "")
+                    ?: return@registerForActivityResult
+
+            val cropPackageNameFile = getPackageNamePictureFile(cropPackagePictureName)
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                val cropUri = Uri.fromFile(cropPackageNameFile)
+                refreshAlbum(cropUri.toString())
+                flcIvPicturePreview.setImageURI(cropUri)
+                return@registerForActivityResult
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val cropUri = getPictureUri(cropPackageNameFile)
+                refreshAlbum(cropUri.toString())
+                flcIvPicturePreview.setImageURI(cropUri)
+                return@registerForActivityResult
+            }
         }
 
     private val createPackageNameResultLauncher =
@@ -265,26 +278,12 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 return@registerForActivityResult
             }
 
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                BaseConstants.ANDROID_SYSTEM,
-                AppCompatActivity.MODE_PRIVATE
-            )
-
             val pictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "")
+                ?: return@registerForActivityResult
 
-            val packageNameFile = File(
-                requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                pictureName ?: ""
-            )
+            val packageNameFile = getPackageNamePictureFile(pictureName)
 
-            MediaScannerConnection.scanFile(
-                requireActivity(),
-                arrayOf(packageNameFile.toString()),
-                null
-            ) { _, _ ->
-
-            }
-
+            refreshAlbum(packageNameFile.toString())
             flcIvPicturePreview.setImageURI(getPictureUri(packageNameFile))
         }
 
@@ -295,27 +294,13 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                 return@registerForActivityResult
             }
 
-            val sharedPreferences = requireActivity().getSharedPreferences(
-                BaseConstants.ANDROID_SYSTEM,
-                AppCompatActivity.MODE_PRIVATE
-            )
-
             val pictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "")
+                ?: return@registerForActivityResult
 
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
-                val phoneFile = File(
-                    Environment.getExternalStoragePublicDirectory("${Environment.DIRECTORY_PICTURES}/AndroidSystem"),
-                    pictureName ?: ""
-                )
+                val phoneFile = getPackageNamePictureFile(pictureName)
 
-                MediaScannerConnection.scanFile(
-                    requireActivity(),
-                    arrayOf(phoneFile.toString()),
-                    null
-                ) { _, _ ->
-
-                }
-
+                refreshAlbum(phoneFile.toString())
                 flcIvPicturePreview.setImageURI(getPictureUri(phoneFile))
             }
 
@@ -341,14 +326,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
                     pictureId
                 )
 
-                MediaScannerConnection.scanFile(
-                    requireActivity(),
-                    arrayOf(uri.toString()),
-                    null
-                ) { _, _ ->
-
-                }
-
+                refreshAlbum(uri.toString())
                 flcIvPicturePreview.setImageURI(uri)
             }
         }
@@ -363,7 +341,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        if (BaseConstants.READ_WRITE_PERMISSIONS == requestCode) {
+        if (BaseConstants.CREATE_PHONE_PICTURE_PERMISSIONS == requestCode) {
             startCreatePhonePicture()
             return
         }
