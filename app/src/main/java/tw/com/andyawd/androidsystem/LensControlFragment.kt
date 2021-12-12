@@ -100,7 +100,7 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
         }
 
         flcMbCropPhonePicture.setOnClickListener {
-
+            startCropCreatePhonePicture()
         }
     }
 
@@ -190,6 +190,57 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             flcIvPicturePreview.setImageURI(uri)
             createPhoneResultLauncher.launch(uri)
             return
+        }
+    }
+
+    private fun startCropCreatePhonePicture() {
+        val pictureName = getPictureFilename(CROP_PHONE_PICTURE_BEFORE)
+
+        sharedPreferences.edit {
+            this.putString(BaseConstants.PICTURE_NAME, pictureName)
+        }
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            val permissionList = arrayOf(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+
+            if (!EasyPermissions.hasPermissions(requireActivity(), *permissionList)) {
+                EasyPermissions.requestPermissions(
+                    this,
+                    "請提供讀寫檔案權限",
+                    BaseConstants.CREATE_CROP_PHONE_PICTURE_PERMISSIONS,
+                    *permissionList
+                )
+                return
+            }
+
+            if (!isCreateFolder(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES))) {
+                return
+            }
+
+            val uri = getPictureUri(getPhonePictureFile(pictureName))
+            flcIvPicturePreview.setImageURI(uri)
+            createCropPhoneResultLauncher.launch(uri)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val contentValue = ContentValues().apply {
+                this.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, pictureName)
+                this.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg")
+                this.put(
+                    MediaStore.Images.ImageColumns.RELATIVE_PATH,
+                    "${Environment.DIRECTORY_PICTURES}/AndroidSystem"
+                )
+            }
+
+            val uri = requireActivity().contentResolver.insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValue
+            )
+            flcIvPicturePreview.setImageURI(uri)
+            createCropPhoneResultLauncher.launch(uri)
         }
     }
 
@@ -331,6 +382,111 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
             }
         }
 
+    private val createCropPhoneResultLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isTakePicture ->
+            if (!isTakePicture) {
+                return@registerForActivityResult
+            }
+
+            val intent = Intent("com.android.camera.action.CROP").apply {
+                this.putExtra("crop", true)
+                this.putExtra("return-data", false)
+                this.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+                this.putExtra("scale", true)
+            }
+
+            val phonePictureName = sharedPreferences.getString(BaseConstants.PICTURE_NAME, "")
+                ?: return@registerForActivityResult
+            val phoneFile = getPhonePictureFile(phonePictureName)
+
+            val cropPhoneName = getPictureFilename(CROP_PHONE_PICTURE_AFTER)
+            val cropPhoneFile = getPhonePictureFile(cropPhoneName)
+
+            sharedPreferences.edit {
+                this.putString(BaseConstants.CROP_PICTURE_NAME, cropPhoneName)
+            }
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                val pictureUri = Uri.fromFile(phoneFile)
+                val cropUri = Uri.fromFile(cropPhoneFile)
+
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(pictureUri, "image/*")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                Log.d("maho", "pictureUri: $pictureUri")
+                Log.d("maho", "cropUri: $cropUri")
+
+                cropPhoneResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+
+            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+                val pictureUri = getPictureUri(phoneFile)
+                val cropUri = getPictureUri(cropPhoneFile)
+
+                intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(pictureUri, "image/*")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+                intent.clipData = ClipData.newRawUri(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                cropPhoneResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                val selection =
+                    "${MediaStore.Images.ImageColumns.DISPLAY_NAME} = '$phonePictureName'"
+                val orderBy = "${MediaStore.Images.ImageColumns.DATE_ADDED} DESC"
+
+                val uriQuery = requireActivity().contentResolver.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    null,
+                    selection,
+                    null,
+                    orderBy
+                ) ?: return@registerForActivityResult
+
+                uriQuery.moveToFirst()
+
+                val id = uriQuery.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+                val pictureId = uriQuery.getLong(id)
+
+                val uri = ContentUris.withAppendedId(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    pictureId
+                )
+
+                val contentValue = ContentValues().apply {
+                    this.put(MediaStore.Images.ImageColumns.DISPLAY_NAME, cropPhoneName)
+                    this.put(MediaStore.Images.ImageColumns.MIME_TYPE, "image/jpeg")
+                    this.put(
+                        MediaStore.Images.ImageColumns.RELATIVE_PATH,
+                        "${Environment.DIRECTORY_PICTURES}/AndroidSystem"
+                    )
+                }
+
+                val cropUri = requireActivity().contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    contentValue
+                )
+
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                intent.setDataAndType(uri, "image/*")
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri)
+
+                cropPhoneResultLauncher.launch(intent)
+                return@registerForActivityResult
+            }
+        }
+
+    private val cropPhoneResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
+            Log.d("maho", "activityResult: $activityResult")
+            refreshAlbum(activityResult.toString())
+        }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -341,9 +497,13 @@ class LensControlFragment : Fragment(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        if (BaseConstants.CREATE_PHONE_PICTURE_PERMISSIONS == requestCode) {
-            startCreatePhonePicture()
-            return
+        when (requestCode) {
+            BaseConstants.CREATE_PHONE_PICTURE_PERMISSIONS -> {
+                startCreatePhonePicture()
+            }
+            BaseConstants.CREATE_CROP_PHONE_PICTURE_PERMISSIONS -> {
+                startCropCreatePhonePicture()
+            }
         }
     }
 
